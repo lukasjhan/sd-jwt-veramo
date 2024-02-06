@@ -7,7 +7,7 @@
   "type": "module",
   "veramo": {
     "pluginInterfaces": {
-      "IMyAgentPlugin": "./src/types/IMyAgentPlugin.ts"
+      "ISDJwtPlugin": "./src/types/ISDJwtPlugin.ts"
     }
   },
   "scripts": {

@@ -1,9 +1,9 @@
 // noinspection ES6PreferShortImport
 
 import { TAgent, IMessageHandler } from '@veramo/core-types'
-import { IMyAgentPlugin } from '../../src/types/IMyAgentPlugin.js'
+import { ISDJwtPlugin } from '../../src/types/ISDJwtPlugin.js'
 
-type ConfiguredAgent = TAgent<IMyAgentPlugin & IMessageHandler>
+type ConfiguredAgent = TAgent<ISDJwtPlugin & IMessageHandler>
 
 export default (testContext: {
   getAgent: () => ConfiguredAgent

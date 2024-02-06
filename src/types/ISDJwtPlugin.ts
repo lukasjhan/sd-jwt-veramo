@@ -20,7 +20,7 @@ import { IPluginMethodMap, IAgentContext, IDIDManager, IResolver } from '@veramo
  *
  * @beta
  */
-export interface IMyAgentPlugin extends IPluginMethodMap {
+export interface ISDJwtPlugin extends IPluginMethodMap {
   /**
    * Your plugin method description
    *

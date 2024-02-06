@@ -1,5 +1,5 @@
 {
-  "IMyAgentPlugin": {
+  "ISDJwtPlugin": {
     "components": {
       "schemas": {
         "IMyAgentPluginFooArgs": {

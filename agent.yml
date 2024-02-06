@@ -271,4 +271,4 @@ agent:
           $args:
             - $ref: /dbConnection
           # __TEMPLATE__: install your plugin on the `@veramo/cli` agent
-        - $require: ./build#MyAgentPlugin
+        - $require: ./build#SDJwtPlugin

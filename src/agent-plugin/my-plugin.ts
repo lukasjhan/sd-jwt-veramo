@@ -1,22 +1,22 @@
 import { IAgentPlugin } from '@veramo/core-types'
 import {
-  IMyAgentPlugin,
+  ISDJwtPlugin,
   IMyAgentPluginFooArgs,
   IRequiredContext,
   IMyAgentPluginFooResult,
-} from '../types/IMyAgentPlugin.js'
+} from '../types/ISDJwtPlugin.js'
 
 import schema from '../plugin.schema.json' assert { type: 'json' }
 
 /**
- * {@inheritDoc IMyAgentPlugin}
+ * {@inheritDoc ISDJwtPlugin}
  * @beta
  */
-export class MyAgentPlugin implements IAgentPlugin {
-  readonly schema = schema.IMyAgentPlugin
+export class SDJwtPlugin implements IAgentPlugin {
+  readonly schema = schema.ISDJwtPlugin
 
   // map the methods your plugin is declaring to their implementation
-  readonly methods: IMyAgentPlugin = {
+  readonly methods: ISDJwtPlugin = {
     myPluginFoo: this.myPluginFoo.bind(this),
   }
 

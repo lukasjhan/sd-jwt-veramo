@@ -14,7 +14,7 @@ import { jest } from '@jest/globals'
 
 jest.setTimeout(30000)
 
-import { IMyAgentPlugin } from '../src/types/IMyAgentPlugin.js'
+import { ISDJwtPlugin } from '../src/types/ISDJwtPlugin.js'
 // Shared tests
 import myPluginLogic from './shared/myPluginLogic'
 
@@ -27,7 +27,7 @@ let restServer: Server
 let dbConnection: DataSource
 
 const getAgent = (options?: IAgentOptions) =>
-  createAgent<IMyAgentPlugin & IMessageHandler>({
+  createAgent<ISDJwtPlugin & IMessageHandler>({
     ...options,
     plugins: [
       new AgentRestClient({
