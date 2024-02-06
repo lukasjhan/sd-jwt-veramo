@@ -1,9 +1,15 @@
 import { IAgentPlugin } from '@veramo/core-types'
 import {
   ISDJwtPlugin,
-  IMyAgentPluginFooArgs,
   IRequiredContext,
-  IMyAgentPluginFooResult,
+  ICreateVerifiableCredentialSDJwtArgs,
+  ICreateVerifiableCredentialSDJwtResult,
+  ICreateVerifiablePresentationSDJwtArgs,
+  ICreateVerifiablePresentationSDJwtResult,
+  IVerifyVerifiableCredentialSDJwtArgs,
+  IVerifyVerifiableCredentialSDJwtResult,
+  IVerifyVerifiablePresentationSDJwtArgs,
+  IVerifyVerifiablePresentationSDJwtResult,
 } from '../types/ISDJwtPlugin.js'
 
 import schema from '../plugin.schema.json' assert { type: 'json' }
@@ -17,27 +23,37 @@ export class SDJwtPlugin implements IAgentPlugin {
 
   // map the methods your plugin is declaring to their implementation
   readonly methods: ISDJwtPlugin = {
-    myPluginFoo: this.myPluginFoo.bind(this),
+    createVerifiableCredentialSDJwt: this.createVerifiableCredentialSDJwt.bind(this),
+    createVerifiablePresentationSDJwt: this.createVerifiablePresentationSDJwt.bind(this),
+    verifyVerifiableCredentialSDJwt: this.verifyVerifiableCredentialSDJwt.bind(this),
+    verifyVerifiablePresentationSDJwt: this.verifyVerifiablePresentationSDJwt.bind(this),
   }
 
-  // list the event types that this plugin cares about.
-  // When the agent emits an event of these types, `MyAgentPlugin.onEvent()` will get called.
-  readonly eventTypes = ['validatedMessage']
-
-  // the event handler for the types listed in `eventTypes`
-  public async onEvent(event: { type: string; data: any }, context: IRequiredContext) {
-    // you can emit other events
-    await context.agent.emit('my-event', { foo: event.data.id })
-    // or call other agent methods that are declared in the context
-    const allDIDs = await context.agent.didManagerFind()
+  async createVerifiableCredentialSDJwt(
+    args: ICreateVerifiableCredentialSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<ICreateVerifiableCredentialSDJwtResult> {
+    return { credential: 'foobar' }
   }
 
-  /** {@inheritDoc IMyAgentPlugin.myPluginFoo} */
-  private async myPluginFoo(args: IMyAgentPluginFooArgs, context: IRequiredContext): Promise<IMyAgentPluginFooResult> {
-    // you can call other agent methods (that are declared in the `IRequiredContext`)
-    const didDoc = await context.agent.resolveDid({ didUrl: args.did })
-    // or emit some events
-    await context.agent.emit('my-other-event', { foo: 'hello' })
-    return { foobar: args.bar }
+  async createVerifiablePresentationSDJwt(
+    args: ICreateVerifiablePresentationSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<ICreateVerifiablePresentationSDJwtResult> {
+    return { presentation: 'foobar' }
+  }
+
+  async verifyVerifiableCredentialSDJwt(
+    args: IVerifyVerifiableCredentialSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<IVerifyVerifiableCredentialSDJwtResult> {
+    return { foobar: 'foobar' }
+  }
+
+  async verifyVerifiablePresentationSDJwt(
+    args: IVerifyVerifiablePresentationSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<IVerifyVerifiablePresentationSDJwtResult> {
+    return { foobar: 'foobar' }
   }
 }

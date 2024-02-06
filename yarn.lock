@@ -876,6 +876,13 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
   integrity sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==
 
+"@hopae/sd-jwt@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@hopae/sd-jwt/-/sd-jwt-2.0.0.tgz#842c4e143f970a953944ad3bb41800590689238b"
+  integrity sha512-4WKvUINqGmusqo5ILkins3kQ7vhH3j6PvDmMLdZuLyqAKdPXIookp4m777F9fufxi4rVQbyRdVBCT3AfaLv6Jw==
+  dependencies:
+    jose "^5.1.3"
+
 "@ipld/dag-pb@^4.0.5":
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/@ipld/dag-pb/-/dag-pb-4.0.8.tgz#d9bfc52aa1d7a7356d2958f8766d85fecc5e4f15"
@@ -2092,7 +2099,6 @@
 
 "@veramo-community/lds-ecdsa-secp256k1-recovery2020@github:uport-project/EcdsaSecp256k1RecoverySignature2020":
   version "0.0.8"
-  uid ab0db52de6f4e6663ef271a48009ba26e688ef9b
   resolved "https://codeload.github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/tar.gz/ab0db52de6f4e6663ef271a48009ba26e688ef9b"
   dependencies:
     "@bitauth/libauth" "^1.19.1"
@@ -2228,7 +2234,7 @@
     "@transmute/credentials-context" "^0.7.0-unstable.81"
     "@transmute/ed25519-signature-2018" "^0.7.0-unstable.81"
     "@transmute/json-web-signature" "^0.7.0-unstable.81"
-    "@veramo-community/lds-ecdsa-secp256k1-recovery2020" "github:uport-project/EcdsaSecp256k1RecoverySignature2020"
+    "@veramo-community/lds-ecdsa-secp256k1-recovery2020" uport-project/EcdsaSecp256k1RecoverySignature2020
     "@veramo/core-types" "^5.6.0"
     "@veramo/utils" "^5.6.0"
     cross-fetch "^4.0.0"
@@ -5056,6 +5062,11 @@ jose@^4.3.8:
   version "4.15.4"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.4.tgz#02a9a763803e3872cf55f29ecef0dfdcc218cc03"
   integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
+
+jose@^5.1.3:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.2.1.tgz#ec3befe173896e592e2d9ef5f267d061ffb203c5"
+  integrity sha512-qiaQhtQRw6YrOaOj0v59h3R6hUY9NvxBmmnMfKemkqYmBB0tEc97NbLP7ix44VP5p9/0YHG8Vyhzuo5YBNwviA==
 
 js-sha3@0.8.0, js-sha3@^0.8.0:
   version "0.8.0"

@@ -14,7 +14,6 @@ let dbConnection: DataSource
 let agent: any
 
 const setup = async (): Promise<boolean> => {
-
   const config = await getConfig('./agent.yml')
 
   const { localAgent, db } = await createObjects(config, { localAgent: '/agent', db: '/dbConnection' })
@@ -41,5 +40,4 @@ const testContext = { getAgent, setup, tearDown }
 
 describe('Local integration tests', () => {
   myPluginLogic(testContext)
-  myPluginEventsLogic(testContext)
 })

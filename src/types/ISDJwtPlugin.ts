@@ -1,4 +1,12 @@
-import { IPluginMethodMap, IAgentContext, IDIDManager, IResolver } from '@veramo/core-types'
+import {
+  IPluginMethodMap,
+  IAgentContext,
+  IDIDManager,
+  IResolver,
+  CredentialPayload,
+  PresentationPayload,
+  IKeyManager,
+} from '@veramo/core-types'
 
 /**
  * My Agent Plugin description.
@@ -29,44 +37,105 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    *   Declaring a context type here lets other developers know which other plugins
    *   need to also be installed for this method to work.
    */
-  myPluginFoo(args: IMyAgentPluginFooArgs, context: IRequiredContext): Promise<IMyAgentPluginFooResult>
+  /**
+   * Create a signed SD-JWT credential.
+   * @param args - Arguments necessary for the creation of a SD-JWT credential.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  createVerifiableCredentialSDJwt(
+    args: ICreateVerifiableCredentialSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<ICreateVerifiableCredentialSDJwtResult>
+
+  /**
+   * Create a signed SD-JWT presentation.
+   * @param args - Arguments necessary for the creation of a SD-JWT presentation.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  createVerifiablePresentationSDJwt(
+    args: ICreateVerifiablePresentationSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<ICreateVerifiablePresentationSDJwtResult>
+
+  /**
+   * Verify a signed SD-JWT credential.
+   * @param args - Arguments necessary for the verification of a SD-JWT credential.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  verifyVerifiableCredentialSDJwt(
+    args: IVerifyVerifiableCredentialSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<IVerifyVerifiableCredentialSDJwtResult>
+
+  /**
+   * Verify a signed SD-JWT presentation.
+   * @param args - Arguments necessary for the verification of a SD-JWT presentation.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  verifyVerifiablePresentationSDJwt(
+    args: IVerifyVerifiablePresentationSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<IVerifyVerifiablePresentationSDJwtResult>
 }
 
 /**
- * Arguments needed for {@link MyAgentPlugin.myPluginFoo}
- * To be able to export a plugin schema, your plugin methods should use an `args` parameter of a
- * named type or interface.
+ * ICreateVerifiableCredentialSDJwtArgs
  *
  * @beta
  */
-export interface IMyAgentPluginFooArgs {
-  /**
-   * Decentralized identifier
-   */
-  did: string
-
-  /**
-   * Lorem ipsum
-   */
-  bar: string
-
-  /**
-   * Dolorem
-   */
-  foo: string
+export interface ICreateVerifiableCredentialSDJwtArgs {
+  credentialPayload: CredentialPayload
 }
 
 /**
- * Result of {@link MyAgentPlugin.myPluginFoo}
- * To be able to export a plugin schema, your plugin return types need to be Promises of a
- * named type or interface.
+ * ICreateVerifiableCredentialSDJwtResult
  *
  * @beta
  */
-export type IMyAgentPluginFooResult = {
-  foobar?: string
-  baz?: any
+export interface ICreateVerifiableCredentialSDJwtResult {
+  credential: string
 }
+
+/**
+ * @beta
+ */
+export interface ICreateVerifiablePresentationSDJwtArgs {
+  presentation: PresentationPayload
+
+  /*
+   * The keys to use for selective disclosure for presentation
+   * if not provided, all keys will be disclosed
+   * if empty array, no keys will be disclosed
+   */
+  presentationKeys?: string[]
+}
+
+/**
+ * @beta
+ */
+export interface ICreateVerifiablePresentationSDJwtResult {
+  presentation: string
+}
+
+/**
+ * @beta
+ */
+export interface IVerifyVerifiableCredentialSDJwtArgs {}
+
+/**
+ * @beta
+ */
+export interface IVerifyVerifiableCredentialSDJwtResult {}
+
+/**
+ * @beta
+ */
+export interface IVerifyVerifiablePresentationSDJwtArgs {}
+
+/**
+ * @beta
+ */
+export interface IVerifyVerifiablePresentationSDJwtResult {}
 
 /**
  * This context describes the requirements of this plugin.
@@ -76,4 +145,4 @@ export type IMyAgentPluginFooResult = {
  *
  * @beta
  */
-export type IRequiredContext = IAgentContext<IResolver & IDIDManager>
+export type IRequiredContext = IAgentContext<IDIDManager & IResolver & IKeyManager>

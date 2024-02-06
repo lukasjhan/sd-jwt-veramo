@@ -22,12 +22,12 @@ export default (testContext: {
     })
 
     it('should foo', async () => {
-      const result = await agent.myPluginFoo({
-        did: 'did:ethr:goerli:0xb09b66026ba5909a7cfe99b76875431d2b8d5190',
-        foo: 'lorem',
-        bar: 'ipsum',
+      const result = await agent.createVerifiableCredentialSDJwt({
+        credentialPayload: {
+          issuer: 'did:example:123',
+        },
       })
-      expect(result).toEqual({ foobar: 'ipsum' })
+      expect(result).toEqual({ credential: 'foobar' })
     })
   })
 }
