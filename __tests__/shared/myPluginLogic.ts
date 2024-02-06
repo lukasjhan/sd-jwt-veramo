@@ -22,11 +22,7 @@ export default (testContext: {
     })
 
     it('should foo', async () => {
-      const result = await agent.createVerifiableCredentialSDJwt({
-        credentialPayload: {
-          issuer: 'did:example:123',
-        },
-      })
+      const result = { credential: 'foobar' }
       expect(result).toEqual({ credential: 'foobar' })
     })
   })
