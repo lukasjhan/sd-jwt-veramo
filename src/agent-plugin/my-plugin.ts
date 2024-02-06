@@ -3,10 +3,10 @@ import {
   IMyAgentPlugin,
   IMyAgentPluginFooArgs,
   IRequiredContext,
-  IMyAgentPluginFooResult
+  IMyAgentPluginFooResult,
 } from '../types/IMyAgentPlugin.js'
 
-import schema from "../plugin.schema.json" assert { type: 'json' }
+import schema from '../plugin.schema.json' assert { type: 'json' }
 
 /**
  * {@inheritDoc IMyAgentPlugin}

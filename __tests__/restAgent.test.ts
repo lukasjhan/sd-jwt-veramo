@@ -1,12 +1,7 @@
 // noinspection ES6PreferShortImport
 
 import 'cross-fetch/polyfill'
-import {
-  IAgent,
-  createAgent,
-  IAgentOptions,
-  IMessageHandler,
-} from '@veramo/core'
+import { IAgent, createAgent, IAgentOptions, IMessageHandler } from '@veramo/core'
 import { DataSource } from 'typeorm'
 import { AgentRestClient } from '@veramo/remote-client'
 import express from 'express'
@@ -44,7 +39,6 @@ const getAgent = (options?: IAgentOptions) =>
   })
 
 const setup = async (options?: IAgentOptions): Promise<boolean> => {
-
   const config = await getConfig('./agent.yml')
   config.constants.databaseFile = databaseFile
   const { agent, db } = await createObjects(config, { agent: '/agent', db: '/dbConnection' })
@@ -71,7 +65,7 @@ const setup = async (options?: IAgentOptions): Promise<boolean> => {
 const tearDown = async (): Promise<boolean> => {
   try {
     await new Promise((resolve, reject) => {
-      restServer.close((err) => err ? reject(err) : resolve(null))
+      restServer.close((err) => (err ? reject(err) : resolve(null)))
     })
     await dbConnection.dropDatabase()
     await dbConnection.destroy()

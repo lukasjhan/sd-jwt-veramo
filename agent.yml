@@ -10,7 +10,7 @@ version: 3.0
 constants:
   baseUrl: http://localhost:3335
   port: 3335
-# please use your own X25519 key, this is only an example
+  # please use your own X25519 key, this is only an example
   secretKey: 29739248cad1bd1a0fc4d9b75cd4d2990de535baf5caadfdf8d8f86664aa830c
   databaseFile: ./database.sqlite
   methods:
@@ -219,9 +219,6 @@ keyManager:
                 - $require: '@veramo/kms-local#SecretBox'
                   $args:
                     - $ref: /constants/secretKey
-        # __TEMPLATE__: you can install your own Key Management System implementation too
-        my:
-          $require: ./build#MyKeyManagementSystem
 
 # DID Manager
 didManager:
@@ -233,11 +230,6 @@ didManager:
           - $ref: /dbConnection
       defaultProvider: did:ethr:goerli
       providers:
-        # __TEMPLATE__: you can install your customized DID provider like so
-        did:my:
-          $require: ./build#MyIdentifierProvider
-          $args:
-            - defaultKms: local
         did:ethr:
           $require: '@veramo/did-provider-ethr#EthrDIDProvider'
           $args:

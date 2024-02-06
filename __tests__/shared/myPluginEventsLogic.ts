@@ -25,10 +25,10 @@ export default (testContext: {
     it('should emit my-event', async () => {
       expect.assertions(1)
 
-      const myId = await agent.didManagerGetOrCreate({ alias: "test" })
+      const myId = await agent.didManagerGetOrCreate({ alias: 'test' })
       const myCredential = await agent.createVerifiableCredential({
         credential: { issuer: myId.did, credentialSubject: { hello: 'world' } },
-        proofFormat: 'jwt'
+        proofFormat: 'jwt',
       })
 
       const handler = jest.fn()
