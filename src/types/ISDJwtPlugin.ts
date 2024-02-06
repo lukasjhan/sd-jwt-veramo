@@ -85,6 +85,8 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
  */
 export interface ICreateVerifiableCredentialSDJwtArgs {
   credentialPayload: CredentialPayload
+
+  discloureFrame?: any
 }
 
 /**
@@ -120,7 +122,9 @@ export interface ICreateVerifiablePresentationSDJwtResult {
 /**
  * @beta
  */
-export interface IVerifyVerifiableCredentialSDJwtArgs {}
+export interface IVerifyVerifiableCredentialSDJwtArgs {
+  credential: string
+}
 
 /**
  * @beta
@@ -130,7 +134,9 @@ export interface IVerifyVerifiableCredentialSDJwtResult {}
 /**
  * @beta
  */
-export interface IVerifyVerifiablePresentationSDJwtArgs {}
+export interface IVerifyVerifiablePresentationSDJwtArgs {
+  presentation: string
+}
 
 /**
  * @beta

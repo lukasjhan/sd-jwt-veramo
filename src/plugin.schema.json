@@ -7,7 +7,8 @@
           "properties": {
             "credentialPayload": {
               "$ref": "#/components/schemas/CredentialPayload"
-            }
+            },
+            "discloureFrame": {}
           },
           "required": [
             "credentialPayload"
@@ -279,13 +280,29 @@
           ]
         },
         "IVerifyVerifiableCredentialSDJwtArgs": {
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "credential": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "credential"
+          ]
         },
         "IVerifyVerifiableCredentialSDJwtResult": {
           "type": "object"
         },
         "IVerifyVerifiablePresentationSDJwtArgs": {
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "presentation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "presentation"
+          ]
         },
         "IVerifyVerifiablePresentationSDJwtResult": {
           "type": "object"

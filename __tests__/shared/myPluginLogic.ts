@@ -21,9 +21,15 @@ export default (testContext: {
       await testContext.tearDown()
     })
 
-    it('should foo', async () => {
-      const result = { credential: 'foobar' }
-      expect(result).toEqual({ credential: 'foobar' })
+    it('Create Verifiable Credential SD JWT', async () => {
+      const result = await agent.createVerifiableCredentialSDJwt({
+        credentialPayload: {
+          issuer: 'did:key:z6Mkkd7Nm1QcNuPWRRQwisH2ZycULqT9H2Q7wDUZSf57mK61',
+          data: 'A',
+        },
+      })
+      console.log({ result })
+      expect(result).toBeDefined()
     })
   })
 }
