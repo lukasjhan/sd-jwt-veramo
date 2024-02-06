@@ -1,5 +1,5 @@
 /**
  * @public
  */
-export { SDJwtPlugin } from './agent-plugin/my-plugin.js'
+export { SDJwtPlugin } from './agent-plugin/SDJwtPlugin.js'
 export * from './types/ISDJwtPlugin.js'
