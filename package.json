@@ -1,5 +1,5 @@
 {
-  "name": "veramo-plugin-template",
+  "name": "@veramo/selective-disclosure-jwt",
   "version": "1.0.0",
   "source": "src/index.ts",
   "main": "build/index.js",
