@@ -1,6 +1,6 @@
 {
   "name": "@lukas.j.han/selective-disclosure-jwt",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "source": "src/index.ts",
   "main": "build/index.js",
   "types": "build/index.d.ts",
