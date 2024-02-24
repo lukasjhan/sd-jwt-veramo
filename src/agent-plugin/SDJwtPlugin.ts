@@ -45,7 +45,7 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async createVerifiableCredentialSDJwt(
     args: ICreateVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<ICreateVerifiableCredentialSDJwtResult> {
     const issuer = extractIssuer(args.credentialPayload, {
       removeParameters: true,
@@ -55,7 +55,7 @@ export class SDJwtPlugin implements IAgentPlugin {
     }
     if (issuer.split('#').length === 1) {
       throw new Error(
-        'invalid_argument: credential.issuer must contain a did id with key reference like did:exmaple.com#key-1',
+        'invalid_argument: credential.issuer must contain a did id with key reference like did:exmaple.com#key-1'
       );
     }
     const identifier = await context.agent.didManagerGet({
@@ -77,7 +77,7 @@ export class SDJwtPlugin implements IAgentPlugin {
 
     const credential = await sdjwt.issue(
       args.credentialPayload,
-      args.disclosureFrame,
+      args.disclosureFrame
     );
     return { credential };
   }
@@ -90,11 +90,11 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async createVerifiablePresentationSDJwt(
     args: ICreateVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<ICreateVerifiablePresentationSDJwtResult> {
     const cred = await SDJwt.fromEncode(
       args.presentation,
-      this.algorithms.hasher,
+      this.algorithms.hasher
     );
     //get the key based on the credential
     const identifier = await context.agent.didManagerFind({ alias: 'holder' });
@@ -111,7 +111,7 @@ export class SDJwtPlugin implements IAgentPlugin {
     });
     const credential = await sdjwt.present(
       args.presentation,
-      args.presentationKeys,
+      args.presentationKeys
     );
     return { presentation: credential };
   }
@@ -124,7 +124,7 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async verifyVerifiableCredentialSDJwt(
     args: IVerifyVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<IVerifyVerifiableCredentialSDJwtResult> {
     // biome-ignore lint/style/useConst: <explanation>
     let sdjwt: SDJwtInstance;
@@ -149,7 +149,7 @@ export class SDJwtPlugin implements IAgentPlugin {
     sdjwt: SDJwtInstance,
     context: IRequiredContext,
     data: string,
-    signature: string,
+    signature: string
   ) {
     const decodedVC = await sdjwt.decode(`${data}.${signature}`);
     const issuer: string = (
@@ -162,15 +162,15 @@ export class SDJwtPlugin implements IAgentPlugin {
     const didDoc = await context.agent.resolveDid({ didUrl: issuer });
     if (!didDoc) {
       throw new Error(
-        'invalid_issuer: issuer did not resolve to a did document',
+        'invalid_issuer: issuer did not resolve to a did document'
       );
     }
     const didDocumentKey = didDoc.didDocument?.verificationMethod?.find(
-      (key) => key.id,
+      (key) => key.id
     );
     if (!didDocumentKey) {
       throw new Error(
-        'invalid_issuer: issuer did document does not include referenced key',
+        'invalid_issuer: issuer did document does not include referenced key'
       );
     }
     //TODO: in case it's another did method, the value of the key can be also encoded as a base64url
@@ -186,7 +186,7 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async verifyVerifiablePresentationSDJwt(
     args: IVerifyVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<IVerifyVerifiablePresentationSDJwtResult> {
     // biome-ignore lint/style/useConst: <explanation>
     let sdjwt: SDJwtInstance;
