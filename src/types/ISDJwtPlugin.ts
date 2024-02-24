@@ -86,6 +86,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
 export interface ICreateVerifiableCredentialSDJwtArgs {
   credentialPayload: CredentialPayload;
 
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   disclosureFrame?: any;
 }
 
@@ -129,7 +130,9 @@ export interface IVerifyVerifiableCredentialSDJwtArgs {
 /**
  * @beta
  */
-export type IVerifyVerifiableCredentialSDJwtResult = {};
+export type IVerifyVerifiableCredentialSDJwtResult = {
+  verifiedPayloads: unknown;
+};
 
 /**
  * @beta
@@ -144,7 +147,7 @@ export interface IVerifyVerifiablePresentationSDJwtArgs {
  * @beta
  */
 export type IVerifyVerifiablePresentationSDJwtResult = {
-  verifiedPayloads: any;
+  verifiedPayloads: unknown;
 };
 
 /**
