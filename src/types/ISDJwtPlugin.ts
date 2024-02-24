@@ -1,14 +1,12 @@
-import { Hasher, SaltGenerator } from "@sd-jwt/types";
-import { Hasher, SaltGenerator } from "@sd-jwt/types";
+import { Hasher, SaltGenerator } from '@sd-jwt/types';
 import {
-	CredentialPayload,
-	IAgentContext,
-	IDIDManager,
-	IKeyManager,
-	IPluginMethodMap,
-	IResolver,
-	PresentationPayload,
-} from "@veramo/core-types";
+  CredentialPayload,
+  IAgentContext,
+  IDIDManager,
+  IKeyManager,
+  IPluginMethodMap,
+  IResolver,
+} from '@veramo/core-types';
 
 /**
  * My Agent Plugin description.
@@ -31,53 +29,53 @@ import {
  * @beta
  */
 export interface ISDJwtPlugin extends IPluginMethodMap {
-	/**
-	 * Your plugin method description
-	 *
-	 * @param args - Input parameters for this method
-	 * @param context - The required context where this method can run.
-	 *   Declaring a context type here lets other developers know which other plugins
-	 *   need to also be installed for this method to work.
-	 */
-	/**
-	 * Create a signed SD-JWT credential.
-	 * @param args - Arguments necessary for the creation of a SD-JWT credential.
-	 * @param context - This reserved param is automatically added and handled by the framework, *do not override*
-	 */
-	createVerifiableCredentialSDJwt(
-		args: ICreateVerifiableCredentialSDJwtArgs,
-		context: IRequiredContext,
-	): Promise<ICreateVerifiableCredentialSDJwtResult>;
+  /**
+   * Your plugin method description
+   *
+   * @param args - Input parameters for this method
+   * @param context - The required context where this method can run.
+   *   Declaring a context type here lets other developers know which other plugins
+   *   need to also be installed for this method to work.
+   */
+  /**
+   * Create a signed SD-JWT credential.
+   * @param args - Arguments necessary for the creation of a SD-JWT credential.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  createVerifiableCredentialSDJwt(
+    args: ICreateVerifiableCredentialSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<ICreateVerifiableCredentialSDJwtResult>;
 
-	/**
-	 * Create a signed SD-JWT presentation.
-	 * @param args - Arguments necessary for the creation of a SD-JWT presentation.
-	 * @param context - This reserved param is automatically added and handled by the framework, *do not override*
-	 */
-	createVerifiablePresentationSDJwt(
-		args: ICreateVerifiablePresentationSDJwtArgs,
-		context: IRequiredContext,
-	): Promise<ICreateVerifiablePresentationSDJwtResult>;
+  /**
+   * Create a signed SD-JWT presentation.
+   * @param args - Arguments necessary for the creation of a SD-JWT presentation.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  createVerifiablePresentationSDJwt(
+    args: ICreateVerifiablePresentationSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<ICreateVerifiablePresentationSDJwtResult>;
 
-	/**
-	 * Verify a signed SD-JWT credential.
-	 * @param args - Arguments necessary for the verification of a SD-JWT credential.
-	 * @param context - This reserved param is automatically added and handled by the framework, *do not override*
-	 */
-	verifyVerifiableCredentialSDJwt(
-		args: IVerifyVerifiableCredentialSDJwtArgs,
-		context: IRequiredContext,
-	): Promise<IVerifyVerifiableCredentialSDJwtResult>;
+  /**
+   * Verify a signed SD-JWT credential.
+   * @param args - Arguments necessary for the verification of a SD-JWT credential.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  verifyVerifiableCredentialSDJwt(
+    args: IVerifyVerifiableCredentialSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<IVerifyVerifiableCredentialSDJwtResult>;
 
-	/**
-	 * Verify a signed SD-JWT presentation.
-	 * @param args - Arguments necessary for the verification of a SD-JWT presentation.
-	 * @param context - This reserved param is automatically added and handled by the framework, *do not override*
-	 */
-	verifyVerifiablePresentationSDJwt(
-		args: IVerifyVerifiablePresentationSDJwtArgs,
-		context: IRequiredContext,
-	): Promise<IVerifyVerifiablePresentationSDJwtResult>;
+  /**
+   * Verify a signed SD-JWT presentation.
+   * @param args - Arguments necessary for the verification of a SD-JWT presentation.
+   * @param context - This reserved param is automatically added and handled by the framework, *do not override*
+   */
+  verifyVerifiablePresentationSDJwt(
+    args: IVerifyVerifiablePresentationSDJwtArgs,
+    context: IRequiredContext
+  ): Promise<IVerifyVerifiablePresentationSDJwtResult>;
 }
 
 /**
@@ -86,9 +84,9 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
  * @beta
  */
 export interface ICreateVerifiableCredentialSDJwtArgs {
-	credentialPayload: CredentialPayload;
+  credentialPayload: CredentialPayload;
 
-	disclosureFrame?: any;
+  disclosureFrame?: any;
 }
 
 /**
@@ -97,35 +95,35 @@ export interface ICreateVerifiableCredentialSDJwtArgs {
  * @beta
  */
 export interface ICreateVerifiableCredentialSDJwtResult {
-	credential: string;
+  credential: string;
 }
 
 /**
  * @beta
  */
 export interface ICreateVerifiablePresentationSDJwtArgs {
-	presentation: string;
+  presentation: string;
 
-	/*
-	 * The keys to use for selective disclosure for presentation
-	 * if not provided, all keys will be disclosed
-	 * if empty array, no keys will be disclosed
-	 */
-	presentationKeys?: string[];
+  /*
+   * The keys to use for selective disclosure for presentation
+   * if not provided, all keys will be disclosed
+   * if empty array, no keys will be disclosed
+   */
+  presentationKeys?: string[];
 }
 
 /**
  * @beta
  */
 export interface ICreateVerifiablePresentationSDJwtResult {
-	presentation: string;
+  presentation: string;
 }
 
 /**
  * @beta
  */
 export interface IVerifyVerifiableCredentialSDJwtArgs {
-	credential: string;
+  credential: string;
 }
 
 /**
@@ -137,16 +135,16 @@ export type IVerifyVerifiableCredentialSDJwtResult = {};
  * @beta
  */
 export interface IVerifyVerifiablePresentationSDJwtArgs {
-	presentation: string;
+  presentation: string;
 
-	requiredClaimKeys?: string[];
+  requiredClaimKeys?: string[];
 }
 
 /**
  * @beta
  */
 export type IVerifyVerifiablePresentationSDJwtResult = {
-	verifiedPayloads: any;
+  verifiedPayloads: any;
 };
 
 /**
@@ -158,14 +156,14 @@ export type IVerifyVerifiablePresentationSDJwtResult = {
  * @beta
  */
 export type IRequiredContext = IAgentContext<
-	IDIDManager & IResolver & IKeyManager
+  IDIDManager & IResolver & IKeyManager
 >;
 export interface SdJWTImplementation {
-	salltGenerator: SaltGenerator;
-	hasher: Hasher;
-	verifySignature: (
-		data: string,
-		signature: string,
-		publicKey: JsonWebKey,
-	) => Promise<boolean>;
+  salltGenerator: SaltGenerator;
+  hasher: Hasher;
+  verifySignature: (
+    data: string,
+    signature: string,
+    publicKey: JsonWebKey
+  ) => Promise<boolean>;
 }
