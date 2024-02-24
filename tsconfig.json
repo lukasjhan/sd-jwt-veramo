@@ -13,11 +13,6 @@
     "outDir": "build",
     "skipLibCheck": true
   },
-  "exclude": [
-    "**/__tests__/**/*",
-    "**/build/**/*"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": ["**/__tests__/**/*", "**/build/**/*"],
+  "include": ["src/**/*", "__tests__/agent.test.ts"]
 }
