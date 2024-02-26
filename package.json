@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
+    "@release-it/conventional-changelog": "^8.0.1",
     "@sd-jwt/crypto-nodejs": "^2.0.2-next.26",
     "@sd-jwt/utils": "next",
     "@types/node": "^20.11.20",
