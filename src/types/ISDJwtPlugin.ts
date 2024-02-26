@@ -1,4 +1,4 @@
-import { Hasher, SaltGenerator } from '@sd-jwt/types';
+import { Hasher, KBOptions, SaltGenerator } from '@sd-jwt/types';
 import {
   CredentialPayload,
   IAgentContext,
@@ -44,7 +44,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   createVerifiableCredentialSDJwt(
     args: ICreateVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<ICreateVerifiableCredentialSDJwtResult>;
 
   /**
@@ -54,7 +54,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   createVerifiablePresentationSDJwt(
     args: ICreateVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<ICreateVerifiablePresentationSDJwtResult>;
 
   /**
@@ -64,7 +64,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   verifyVerifiableCredentialSDJwt(
     args: IVerifyVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<IVerifyVerifiableCredentialSDJwtResult>;
 
   /**
@@ -74,7 +74,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   verifyVerifiablePresentationSDJwt(
     args: IVerifyVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<IVerifyVerifiablePresentationSDJwtResult>;
 }
 
@@ -84,10 +84,15 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
  * @beta
  */
 export interface ICreateVerifiableCredentialSDJwtArgs {
-  credentialPayload: CredentialPayload;
+  credentialPayload: SDJWTVCCredentialPayload;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   disclosureFrame?: any;
+}
+
+export interface SDJWTVCCredentialPayload {
+  iss: string;
+  [key: string]: unknown;
 }
 
 /**
@@ -111,6 +116,8 @@ export interface ICreateVerifiablePresentationSDJwtArgs {
    * if empty array, no keys will be disclosed
    */
   presentationKeys?: string[];
+
+  kb?: KBOptions;
 }
 
 /**
@@ -141,6 +148,8 @@ export interface IVerifyVerifiablePresentationSDJwtArgs {
   presentation: string;
 
   requiredClaimKeys?: string[];
+
+  kb?: boolean;
 }
 
 /**
@@ -167,6 +176,6 @@ export interface SdJWTImplementation {
   verifySignature: (
     data: string,
     signature: string,
-    publicKey: JsonWebKey,
+    publicKey: JsonWebKey
   ) => Promise<boolean>;
 }
