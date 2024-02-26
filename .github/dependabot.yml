@@ -8,9 +8,8 @@ updates:
     schedule:
       interval: "daily"
   # Lerna-specific configuration
-  - package-ecosystem: "npm"
-    # Assuming Lerna packages are in the 'packages' directory, adjust if different
-    directory: "/packages/*"
+  - package-ecosystem: "npm"    
+    directory: "./"
     schedule:
       interval: "daily"
     # Additional configuration for monorepos
