@@ -1,6 +1,6 @@
 import { Jwt, SDJwt, SDJwtInstance } from '@sd-jwt/core';
 import { Signer, Verifier } from '@sd-jwt/types';
-import { IAgentPlugin, IIdentifier, IKey } from '@veramo/core-types';
+import { IAgentPlugin } from '@veramo/core-types';
 import { extractIssuer } from '@veramo/utils';
 import schema from '../plugin.schema.json' assert { type: 'json' };
 import { SdJWTImplementation } from '../types/ISDJwtPlugin';
@@ -16,6 +16,7 @@ import {
   IVerifyVerifiablePresentationSDJwtArgs,
   IVerifyVerifiablePresentationSDJwtResult,
 } from '../types/ISDJwtPlugin.js';
+import { mapIdentifierKeysToDocWithJwkSupport } from '@sphereon/ssi-sdk-ext.did-utils';
 
 /**
  * SD-JWT plugin for Veramo
@@ -45,24 +46,19 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async createVerifiableCredentialSDJwt(
     args: ICreateVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<ICreateVerifiableCredentialSDJwtResult> {
-    const issuer = extractIssuer(args.credentialPayload, {
-      removeParameters: true,
-    });
+    const issuer = args.credentialPayload.iss;
     if (!issuer) {
       throw new Error('invalid_argument: credential.issuer must not be empty');
     }
     if (issuer.split('#').length === 1) {
       throw new Error(
-        'invalid_argument: credential.issuer must contain a did id with key reference like did:exmaple.com#key-1',
+        'invalid_argument: credential.issuer must contain a did id with key reference like did:exmaple.com#key-1'
       );
     }
-    const identifier = await context.agent.didManagerGet({
-      did: issuer.split('#')[0],
-    });
-    //TODO: how to make sure it is getting the correct key? Right now it's looping over it, but without checking the key reference.
-    const { key, alg } = SDJwtPlugin.getSigningKey(identifier);
+    const { alg, key } = await this.getSignKey(issuer, context);
+
     //TODO: let the user also insert a method to sign the data
     const signer: Signer = async (data: string) =>
       context.agent.keyManagerSign({ keyRef: key.kid, data });
@@ -77,9 +73,37 @@ export class SDJwtPlugin implements IAgentPlugin {
 
     const credential = await sdjwt.issue(
       args.credentialPayload,
-      args.disclosureFrame,
+      args.disclosureFrame
     );
     return { credential };
+  }
+
+  private async getSignKey(issuer: string, context: IRequiredContext) {
+    const identifier = await context.agent.didManagerGet({
+      did: issuer.split('#')[0],
+    });
+    const doc = await mapIdentifierKeysToDocWithJwkSupport(
+      identifier,
+      'assertionMethod',
+      context
+    );
+    if (!doc || doc.length === 0) throw new Error('No key found for signing');
+    const key = doc[0];
+    let alg: string;
+    switch (key.type) {
+      case 'Ed25519':
+        alg = 'EdDSA';
+        break;
+      case 'Secp256k1':
+        alg = 'ES256K';
+        break;
+      case 'Secp256r1':
+        alg = 'ES256';
+        break;
+      default:
+        throw new Error(`unsupported key type ${key.type}`);
+    }
+    return { alg, key };
   }
 
   /**
@@ -90,28 +114,36 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async createVerifiablePresentationSDJwt(
     args: ICreateVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<ICreateVerifiablePresentationSDJwtResult> {
     const cred = await SDJwt.fromEncode(
       args.presentation,
-      this.algorithms.hasher,
+      this.algorithms.hasher
     );
+    const claims = await cred.getClaims(this.algorithms.hasher);
+    // get the holder id. In case of a w3c vc dm, it is in the credentialsubject
+    const holderDID: string = claims.id;
     //get the key based on the credential
-    const identifier = await context.agent.didManagerFind({ alias: 'holder' });
-    const { key, alg } = SDJwtPlugin.getSigningKey(identifier[0]);
+    if (!holderDID)
+      throw new Error(
+        'invalid_argument: credential does not include a holder reference'
+      );
+    const { alg, key } = await this.getSignKey(holderDID, context);
 
-    const signer: Signer = async (data: string) =>
-      context.agent.keyManagerSign({ keyRef: key.kid, data });
+    const signer: Signer = async (data: string) => {
+      return context.agent.keyManagerSign({ keyRef: key.kid, data });
+    };
 
     const sdjwt = new SDJwtInstance({
       hasher: this.algorithms.hasher,
       saltGenerator: this.algorithms.salltGenerator,
-      signAlg: alg,
-      signer,
+      kbSigner: signer,
+      kbSignAlg: alg,
     });
     const credential = await sdjwt.present(
       args.presentation,
       args.presentationKeys,
+      { kb: args.kb }
     );
     return { presentation: credential };
   }
@@ -124,7 +156,7 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async verifyVerifiableCredentialSDJwt(
     args: IVerifyVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<IVerifyVerifiableCredentialSDJwtResult> {
     // biome-ignore lint/style/useConst: <explanation>
     let sdjwt: SDJwtInstance;
@@ -150,11 +182,12 @@ export class SDJwtPlugin implements IAgentPlugin {
     context: IRequiredContext,
     data: string,
     signature: string,
+    verifyKb = false
   ) {
     const decodedVC = await sdjwt.decode(`${data}.${signature}`);
     const issuer: string = (
       (decodedVC.jwt as Jwt).payload as Record<string, unknown>
-    ).issuer as string;
+    ).iss as string;
     //check if the issuer is a did
     if (!issuer.startsWith('did:')) {
       throw new Error('invalid_issuer: issuer must be a did');
@@ -162,15 +195,15 @@ export class SDJwtPlugin implements IAgentPlugin {
     const didDoc = await context.agent.resolveDid({ didUrl: issuer });
     if (!didDoc) {
       throw new Error(
-        'invalid_issuer: issuer did not resolve to a did document',
+        'invalid_issuer: issuer did not resolve to a did document'
       );
     }
     const didDocumentKey = didDoc.didDocument?.verificationMethod?.find(
-      (key) => key.id,
+      (key) => key.id
     );
     if (!didDocumentKey) {
       throw new Error(
-        'invalid_issuer: issuer did document does not include referenced key',
+        'invalid_issuer: issuer did document does not include referenced key'
       );
     }
     //TODO: in case it's another did method, the value of the key can be also encoded as a base64url
@@ -186,39 +219,25 @@ export class SDJwtPlugin implements IAgentPlugin {
    */
   async verifyVerifiablePresentationSDJwt(
     args: IVerifyVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
+    context: IRequiredContext
   ): Promise<IVerifyVerifiablePresentationSDJwtResult> {
     // biome-ignore lint/style/useConst: <explanation>
     let sdjwt: SDJwtInstance;
     const verifier: Verifier = async (data: string, signature: string) =>
       this.verify(sdjwt, context, data, signature);
-    sdjwt = new SDJwtInstance({ verifier, hasher: this.algorithms.hasher });
-    const verifiedPayloads = await sdjwt.verify(args.presentation);
+    const verifierKb: Verifier = async (data: string, signature: string) =>
+      this.verify(sdjwt, context, data, signature, true);
+    sdjwt = new SDJwtInstance({
+      verifier,
+      hasher: this.algorithms.hasher,
+      kbVerifier: verifierKb,
+    });
+    const verifiedPayloads = await sdjwt.verify(
+      args.presentation,
+      args.requiredClaimKeys,
+      args.kb
+    );
 
     return { verifiedPayloads };
-  }
-
-  /**
-   * Get the signing key for a given identifier
-   * @param identifier
-   * @returns
-   */
-  private static getSigningKey(identifier: IIdentifier): {
-    key: IKey;
-    alg: string;
-  } {
-    for (const key of identifier.keys) {
-      if (key.type === 'Ed25519') {
-        return { key, alg: 'EdDSA' };
-      }
-      if (key.type === 'Secp256k1') {
-        return { key, alg: 'ES256K' };
-      }
-      if (key.type === 'Secp256r1') {
-        return { key, alg: 'ES256' };
-      }
-    }
-
-    throw Error(`key_not_found: No signing key for ${identifier.did}`);
   }
 }

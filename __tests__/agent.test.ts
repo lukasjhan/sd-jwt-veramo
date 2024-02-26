@@ -1,6 +1,6 @@
 import { subtle } from 'node:crypto';
 import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
-import { DisclosureFrame } from '@sd-jwt/types';
+import { DisclosureFrame, kbPayload } from '@sd-jwt/types';
 import { createAgent } from '@veramo/core';
 import {
   IDIDManager,
@@ -28,6 +28,7 @@ import { Resolver } from 'did-resolver';
 import { createConnection } from 'typeorm';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { ISDJwtPlugin, SDJwtPlugin } from '../src/';
+import { KBJwt, SDJwt } from '@sd-jwt/core';
 
 async function verifySignature(
   data: string,
@@ -64,6 +65,7 @@ describe('Agent plugin', () => {
 
   // Issuer Define the claims object with the user's information
   const claims = {
+    id: '',
     sub: 'john_deo_42',
     given_name: 'John',
     family_name: 'Deo',
@@ -79,20 +81,17 @@ describe('Agent plugin', () => {
   };
 
   // Issuer Define the disclosure frame to specify which claims can be disclosed
-  const disclosureFrame: { credentialSubject: DisclosureFrame<typeof claims> } =
-    {
-      credentialSubject: {
-        _sd: [
-          'sub',
-          'given_name',
-          'family_name',
-          'email',
-          'phone',
-          'address',
-          'birthdate',
-        ],
-      },
-    };
+  const disclosureFrame: DisclosureFrame<typeof claims> = {
+    _sd: [
+      'sub',
+      'given_name',
+      'family_name',
+      'email',
+      'phone',
+      'address',
+      'birthdate',
+    ],
+  };
 
   beforeAll(async () => {
     const KMS_SECRET_KEY = '000102030405060708090a0b0c0d0e0f';
@@ -159,11 +158,12 @@ describe('Agent plugin', () => {
         // we add a key reference
         return `${did.did}#0`;
       });
+    claims.id = holder;
   });
 
   it('create a sd-jwt', async () => {
     const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { credentialSubject: claims, issuer },
+      credentialPayload: { ...claims, iss: issuer },
       disclosureFrame,
     });
     expect(credential).toBeDefined();
@@ -171,43 +171,60 @@ describe('Agent plugin', () => {
 
   it('verify a sd-jwt', async () => {
     const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { credentialSubject: claims, issuer },
+      credentialPayload: { ...claims, iss: issuer },
       disclosureFrame: disclosureFrame,
     });
     const verified = await agent.verifyVerifiableCredentialSDJwt({
       credential: credential.credential,
     });
-    console.log(JSON.stringify(verified, null, 4));
   }, 5000);
 
   it('create a presentation', async () => {
     const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { credentialSubject: claims, issuer },
+      credentialPayload: { ...claims, iss: issuer },
       disclosureFrame,
     });
     const presentation = await agent.createVerifiablePresentationSDJwt({
       presentation: credential.credential,
-      presentationKeys: ['credentialSubject.given_name'],
+      presentationKeys: ['given_name'],
+      kb: {
+        payload: {
+          sd_hash: 'sha-256',
+          aud: '1',
+          iat: 1,
+          nonce: '342',
+        },
+      },
     });
     expect(presentation).toBeDefined();
+    const decoded = await SDJwt.decodeSDJwt(presentation.presentation, digest);
+    expect(decoded.kbJwt).toBeDefined();
+    expect(((decoded.kbJwt as KBJwt).payload as kbPayload).aud).toBe('1');
   });
 
   it('verify a presentation', async () => {
     const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { credentialSubject: claims, issuer },
+      credentialPayload: { ...claims, iss: issuer },
       disclosureFrame,
     });
     const presentation = await agent.createVerifiablePresentationSDJwt({
       presentation: credential.credential,
-      presentationKeys: ['credentialSubject.given_name'],
+      presentationKeys: ['given_name'],
+      kb: {
+        payload: {
+          sd_hash: 'sha-256',
+          aud: '1',
+          iat: 1,
+          nonce: '342',
+        },
+      },
     });
     const result = await agent.verifyVerifiablePresentationSDJwt({
       presentation: presentation.presentation,
-      requiredClaimKeys: ['credentialSubject.given_name'],
+      requiredClaimKeys: ['given_name'],
+      kb: false,
     });
     expect(result).toBeDefined();
-    expect(result.verifiedPayloads.payload.credentialSubject.given_name).toBe(
-      'John'
-    );
+    expect(result.verifiedPayloads.payload.given_name).toBe('John');
   });
 });
