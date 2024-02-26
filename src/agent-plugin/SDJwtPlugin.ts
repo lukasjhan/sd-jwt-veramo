@@ -1,7 +1,6 @@
 import { Jwt, SDJwt, SDJwtInstance } from '@sd-jwt/core';
 import { Signer, Verifier } from '@sd-jwt/types';
 import { IAgentPlugin } from '@veramo/core-types';
-import { extractIssuer } from '@veramo/utils';
 import schema from '../plugin.schema.json' assert { type: 'json' };
 import { SdJWTImplementation } from '../types/ISDJwtPlugin';
 import {
@@ -17,6 +16,11 @@ import {
   IVerifyVerifiablePresentationSDJwtResult,
 } from '../types/ISDJwtPlugin.js';
 import { mapIdentifierKeysToDocWithJwkSupport } from '@sphereon/ssi-sdk-ext.did-utils';
+
+interface Claims {
+  id: string;
+  [key: string]: unknown;
+}
 
 /**
  * SD-JWT plugin for Veramo
@@ -120,7 +124,7 @@ export class SDJwtPlugin implements IAgentPlugin {
       args.presentation,
       this.algorithms.hasher
     );
-    const claims = await cred.getClaims(this.algorithms.hasher);
+    const claims = await cred.getClaims<Claims>(this.algorithms.hasher);
     // get the holder id. In case of a w3c vc dm, it is in the credentialsubject
     const holderDID: string = claims.id;
     //get the key based on the credential
