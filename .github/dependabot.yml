@@ -9,7 +9,7 @@ updates:
       interval: "daily"
   # Lerna-specific configuration
   - package-ecosystem: "npm"    
-    directory: "./"
+    directory: "/"
     schedule:
       interval: "daily"
     # Additional configuration for monorepos
