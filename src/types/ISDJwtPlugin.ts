@@ -44,7 +44,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   createVerifiableCredentialSDJwt(
     args: ICreateVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext
+    context: IRequiredContext,
   ): Promise<ICreateVerifiableCredentialSDJwtResult>;
 
   /**
@@ -54,7 +54,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   createVerifiablePresentationSDJwt(
     args: ICreateVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext
+    context: IRequiredContext,
   ): Promise<ICreateVerifiablePresentationSDJwtResult>;
 
   /**
@@ -64,7 +64,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   verifyVerifiableCredentialSDJwt(
     args: IVerifyVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext
+    context: IRequiredContext,
   ): Promise<IVerifyVerifiableCredentialSDJwtResult>;
 
   /**
@@ -74,7 +74,7 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    */
   verifyVerifiablePresentationSDJwt(
     args: IVerifyVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext
+    context: IRequiredContext,
   ): Promise<IVerifyVerifiablePresentationSDJwtResult>;
 }
 
@@ -176,6 +176,6 @@ export interface SdJWTImplementation {
   verifySignature: (
     data: string,
     signature: string,
-    publicKey: JsonWebKey
+    publicKey: JsonWebKey,
   ) => Promise<boolean>;
 }
