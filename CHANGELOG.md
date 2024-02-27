@@ -1,5 +1,12 @@
 
 
+## [0.0.4](https://github.com/cre8/sd-jwt-veramo/compare/v0.0.2...v0.0.4) (2024-02-27)
+
+
+### Bug Fixes
+
+* set version manually ([93c3cc6](https://github.com/cre8/sd-jwt-veramo/commit/93c3cc6e8260ca1c79dfc0da8d0c7fc7a0221b98))
+
 ## [0.0.2](https://github.com/cre8/sd-jwt-veramo/compare/v0.0.1...v0.0.2) (2024-02-26)
 
 
