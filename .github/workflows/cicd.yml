@@ -129,10 +129,12 @@ jobs:
   #         cache: 'pnpm'
   #     - name: git config
   #       run: |
-  #         git config user.name "${GITHUB_ACTOR}"
-  #         git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"      
-  #     - name: generate schema
-  #       run: pnpm run generate-plugin-schema
+  #         git config user.name "${{github.actor}}"
+  #         git config user.email "${{github.actor}}@users.noreply.github.com"      
+  #     - name: Set npm token
+  #       run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+  #       env:
+  #         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   #     - name: Build
   #       run: pnpm build      
   #     - run: pnpm run release
