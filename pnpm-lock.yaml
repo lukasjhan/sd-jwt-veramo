@@ -9,8 +9,8 @@ dependencies:
     specifier: next
     version: 0.3.2-next.63
   '@sd-jwt/crypto-nodejs':
-    specifier: 0.3.2-next.63
-    version: 0.3.2-next.63
+    specifier: 0.3.2-next.97
+    version: 0.3.2-next.97
   '@sd-jwt/types':
     specifier: 0.3.2-next.63
     version: 0.3.2-next.63
@@ -3650,8 +3650,9 @@ packages:
       '@sd-jwt/utils': 0.3.2-next.63
     dev: false
 
-  /@sd-jwt/crypto-nodejs@0.3.2-next.63:
-    resolution: {integrity: sha512-6W3u6nXYcl0Ivaim9v4s2atohJYpnZCRgHopCuMtDQwNglPPRKrDY2oZBHDyc52O3/XY1zPxY2s7y0ZA0obx1w==}
+  /@sd-jwt/crypto-nodejs@0.3.2-next.97:
+    resolution: {integrity: sha512-FWagaDZSNiM/m3OWVujxZzNh8vnn3AqbHNs2m6biVE1uTQpUGCV+5z2DDgmQYmMq8d4H/6En7/ousmAf2kcXWQ==}
+    engines: {node: '>=16'}
     dev: false
 
   /@sd-jwt/decode@0.3.2-next.63:
@@ -4416,7 +4417,7 @@ packages:
       '@transmute/credentials-context': 0.7.0-unstable.82
       '@transmute/ed25519-signature-2018': 0.7.0-unstable.82
       '@transmute/json-web-signature': 0.7.0-unstable.82
-      '@veramo-community/lds-ecdsa-secp256k1-recovery2020': github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4)
+      '@veramo-community/lds-ecdsa-secp256k1-recovery2020': git/github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4)
       '@veramo/core-types': 5.6.0
       '@veramo/utils': 5.6.0
       cross-fetch: 4.0.0
@@ -12112,9 +12113,9 @@ packages:
       commander: 10.0.1
     dev: true
 
-  github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4):
-    resolution: {tarball: https://codeload.github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/tar.gz/ab0db52de6f4e6663ef271a48009ba26e688ef9b}
-    id: github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b
+  git/github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4):
+    resolution: {commit: ab0db52de6f4e6663ef271a48009ba26e688ef9b, repo: git@github.com:uport-project/EcdsaSecp256k1RecoverySignature2020.git, type: git}
+    id: git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b
     name: '@veramo-community/lds-ecdsa-secp256k1-recovery2020'
     version: 0.0.8
     dependencies:
