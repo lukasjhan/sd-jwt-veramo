@@ -36,7 +36,7 @@ import { ISDJwtPlugin, SDJwtPlugin } from '../index';
 async function verifySignature<T>(
   data: string,
   signature: string,
-  key: JsonWebKey
+  key: JsonWebKey,
 ) {
   let { alg, crv } = key;
   if (alg === 'ES256') alg = 'ECDSA';
@@ -45,15 +45,15 @@ async function verifySignature<T>(
     key,
     { name: alg, namedCurve: crv } as EcKeyImportParams,
     true,
-    ['verify']
+    ['verify'],
   );
   return Promise.resolve(
     subtle.verify(
       { name: alg as string, hash: 'SHA-256' },
       publicKey,
       Buffer.from(signature, 'base64'),
-      Buffer.from(data)
-    )
+      Buffer.from(data),
+    ),
   );
 }
 
@@ -116,7 +116,7 @@ describe('Agent plugin', () => {
           store: new KeyStore(dbConnection),
           kms: {
             local: new KeyManagementSystem(
-              new PrivateKeyStore(dbConnection, new SecretBox(KMS_SECRET_KEY))
+              new PrivateKeyStore(dbConnection, new SecretBox(KMS_SECRET_KEY)),
             ),
           },
         }),
@@ -159,7 +159,7 @@ describe('Agent plugin', () => {
       .then((did) => {
         claims.cnf.jwk = createJWK(
           did.keys[0].type as JwkDidSupportedKeyTypes,
-          did.keys[0].publicKeyHex
+          did.keys[0].publicKeyHex,
         ) as JsonWebKey;
         return `${did.did}#0`;
       });
@@ -190,7 +190,7 @@ describe('Agent plugin', () => {
       agent.createSdJwtVc({
         credentialPayload: credentialPayload as unknown as SdJwtVcPayload,
         disclosureFrame,
-      })
+      }),
     ).rejects.toThrow('credential.issuer must not be empty');
   });
 
@@ -205,7 +205,7 @@ describe('Agent plugin', () => {
       agent.createSdJwtVc({
         credentialPayload,
         disclosureFrame,
-      })
+      }),
     ).rejects.toThrow('credential.issuer must reference a key');
   });
 
