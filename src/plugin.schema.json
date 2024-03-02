@@ -2,7 +2,7 @@
   "ISDJwtPlugin": {
     "components": {
       "schemas": {
-        "ICreateVerifiableCredentialSDJwtArgs": {
+        "IcreateSDJwtVcArgs": {
           "type": "object",
           "properties": {
             "credentialPayload": {
@@ -11,7 +11,7 @@
             "disclosureFrame": {}
           },
           "required": ["credentialPayload"],
-          "description": "ICreateVerifiableCredentialSDJwtArgs"
+          "description": "IcreateSDJwtVcArgs"
         },
         "CredentialPayload": {
           "type": "object",
@@ -114,7 +114,7 @@
           "required": ["id", "type"],
           "description": "Used for the discovery of information about the current status of a verifiable credential, such as whether it is suspended or revoked. The precise contents of the credential status information is determined by the specific `credentialStatus` type definition, and varies depending on factors such as whether it is simple to implement or if it is privacy-enhancing.\n\nSee  {@link https://www.w3.org/TR/vc-data-model/#status | Credential Status }"
         },
-        "ICreateVerifiableCredentialSDJwtResult": {
+        "IcreateSDJwtVcResult": {
           "type": "object",
           "properties": {
             "credential": {
@@ -122,9 +122,9 @@
             }
           },
           "required": ["credential"],
-          "description": "ICreateVerifiableCredentialSDJwtResult"
+          "description": "IcreateSDJwtVcResult"
         },
-        "ICreateVerifiablePresentationSDJwtArgs": {
+        "ICreateSdJwtVcPresentationArgs": {
           "type": "object",
           "properties": {
             "presentation": {
@@ -139,7 +139,7 @@
           },
           "required": ["presentation"]
         },
-        "ICreateVerifiablePresentationSDJwtResult": {
+        "ICreateSdJwtVcPresentationResult": {
           "type": "object",
           "properties": {
             "presentation": {
@@ -148,7 +148,7 @@
           },
           "required": ["presentation"]
         },
-        "IVerifyVerifiableCredentialSDJwtArgs": {
+        "IVerifySdJwtVcArgs": {
           "type": "object",
           "properties": {
             "credential": {
@@ -157,10 +157,10 @@
           },
           "required": ["credential"]
         },
-        "IVerifyVerifiableCredentialSDJwtResult": {
+        "IVerifySdJwtVcResult": {
           "type": "object"
         },
-        "IVerifyVerifiablePresentationSDJwtArgs": {
+        "IVerifySdJwtVcPresentationArgs": {
           "type": "object",
           "properties": {
             "presentation": {
@@ -175,7 +175,7 @@
           },
           "required": ["presentation"]
         },
-        "IVerifyVerifiablePresentationSDJwtResult": {
+        "IVerifySdJwtVcPresentationResult": {
           "type": "object",
           "properties": {
             "verifiedPayloads": {}
@@ -184,40 +184,40 @@
         }
       },
       "methods": {
-        "createVerifiableCredentialSDJwt": {
+        "createSDJwtVc": {
           "description": "Create a signed SD-JWT credential.",
           "arguments": {
-            "$ref": "#/components/schemas/ICreateVerifiableCredentialSDJwtArgs"
+            "$ref": "#/components/schemas/IcreateSDJwtVcArgs"
           },
           "returnType": {
-            "$ref": "#/components/schemas/ICreateVerifiableCredentialSDJwtResult"
+            "$ref": "#/components/schemas/IcreateSDJwtVcResult"
           }
         },
-        "createVerifiablePresentationSDJwt": {
+        "createSdJwtVcPresentation": {
           "description": "Create a signed SD-JWT presentation.",
           "arguments": {
-            "$ref": "#/components/schemas/ICreateVerifiablePresentationSDJwtArgs"
+            "$ref": "#/components/schemas/ICreateSdJwtVcPresentationArgs"
           },
           "returnType": {
-            "$ref": "#/components/schemas/ICreateVerifiablePresentationSDJwtResult"
+            "$ref": "#/components/schemas/ICreateSdJwtVcPresentationResult"
           }
         },
-        "verifyVerifiableCredentialSDJwt": {
+        "verifySdJwtVc": {
           "description": "Verify a signed SD-JWT credential.",
           "arguments": {
-            "$ref": "#/components/schemas/IVerifyVerifiableCredentialSDJwtArgs"
+            "$ref": "#/components/schemas/IVerifySdJwtVcArgs"
           },
           "returnType": {
-            "$ref": "#/components/schemas/IVerifyVerifiableCredentialSDJwtResult"
+            "$ref": "#/components/schemas/IVerifySdJwtVcResult"
           }
         },
-        "verifyVerifiablePresentationSDJwt": {
+        "verifySdJwtVcPresentation": {
           "description": "Verify a signed SD-JWT presentation.",
           "arguments": {
-            "$ref": "#/components/schemas/IVerifyVerifiablePresentationSDJwtArgs"
+            "$ref": "#/components/schemas/IVerifySdJwtVcPresentationArgs"
           },
           "returnType": {
-            "$ref": "#/components/schemas/IVerifyVerifiablePresentationSDJwtResult"
+            "$ref": "#/components/schemas/IVerifySdJwtVcPresentationResult"
           }
         }
       }

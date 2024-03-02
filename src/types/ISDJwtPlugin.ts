@@ -1,4 +1,5 @@
 import { Hasher, KBOptions, SaltGenerator } from '@sd-jwt/types';
+import { SdJwtVcPayload } from '@sd-jwt/sd-jwt-vc';
 import {
   CredentialPayload,
   IAgentContext,
@@ -42,72 +43,67 @@ export interface ISDJwtPlugin extends IPluginMethodMap {
    * @param args - Arguments necessary for the creation of a SD-JWT credential.
    * @param context - This reserved param is automatically added and handled by the framework, *do not override*
    */
-  createVerifiableCredentialSDJwt(
-    args: ICreateVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
-  ): Promise<ICreateVerifiableCredentialSDJwtResult>;
+  createSdJwtVc(
+    args: ICreateSdJwtVcArgs,
+    context: IRequiredContext
+  ): Promise<ICreateSdJwtVcResult>;
 
   /**
    * Create a signed SD-JWT presentation.
    * @param args - Arguments necessary for the creation of a SD-JWT presentation.
    * @param context - This reserved param is automatically added and handled by the framework, *do not override*
    */
-  createVerifiablePresentationSDJwt(
-    args: ICreateVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
-  ): Promise<ICreateVerifiablePresentationSDJwtResult>;
+  createSdJwtVcPresentation(
+    args: ICreateSdJwtVcPresentationArgs,
+    context: IRequiredContext
+  ): Promise<ICreateSdJwtVcPresentationResult>;
 
   /**
    * Verify a signed SD-JWT credential.
    * @param args - Arguments necessary for the verification of a SD-JWT credential.
    * @param context - This reserved param is automatically added and handled by the framework, *do not override*
    */
-  verifyVerifiableCredentialSDJwt(
-    args: IVerifyVerifiableCredentialSDJwtArgs,
-    context: IRequiredContext,
-  ): Promise<IVerifyVerifiableCredentialSDJwtResult>;
+  verifySdJwtVc(
+    args: IVerifySdJwtVcArgs,
+    context: IRequiredContext
+  ): Promise<IVerifySdJwtVcResult>;
 
   /**
    * Verify a signed SD-JWT presentation.
    * @param args - Arguments necessary for the verification of a SD-JWT presentation.
    * @param context - This reserved param is automatically added and handled by the framework, *do not override*
    */
-  verifyVerifiablePresentationSDJwt(
-    args: IVerifyVerifiablePresentationSDJwtArgs,
-    context: IRequiredContext,
-  ): Promise<IVerifyVerifiablePresentationSDJwtResult>;
+  verifySdJwtVcPresentation(
+    args: IVerifySdJwtVcPresentationArgs,
+    context: IRequiredContext
+  ): Promise<IVerifySdJwtVcPresentationResult>;
 }
 
 /**
- * ICreateVerifiableCredentialSDJwtArgs
+ * ICreateSdJwtVcArgs
  *
  * @beta
  */
-export interface ICreateVerifiableCredentialSDJwtArgs {
-  credentialPayload: SDJWTVCCredentialPayload;
+export interface ICreateSdJwtVcArgs {
+  credentialPayload: SdJwtVcPayload;
 
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   disclosureFrame?: any;
 }
 
-export interface SDJWTVCCredentialPayload {
-  iss: string;
-  [key: string]: unknown;
-}
-
 /**
- * ICreateVerifiableCredentialSDJwtResult
+ * ICreateSdJwtVcResult
  *
  * @beta
  */
-export interface ICreateVerifiableCredentialSDJwtResult {
+export interface ICreateSdJwtVcResult {
   credential: string;
 }
 
 /**
  * @beta
  */
-export interface ICreateVerifiablePresentationSDJwtArgs {
+export interface ICreateSdJwtVcPresentationArgs {
   presentation: string;
 
   /*
@@ -123,28 +119,28 @@ export interface ICreateVerifiablePresentationSDJwtArgs {
 /**
  * @beta
  */
-export interface ICreateVerifiablePresentationSDJwtResult {
+export interface ICreateSdJwtVcPresentationResult {
   presentation: string;
 }
 
 /**
  * @beta
  */
-export interface IVerifyVerifiableCredentialSDJwtArgs {
+export interface IVerifySdJwtVcArgs {
   credential: string;
 }
 
 /**
  * @beta
  */
-export type IVerifyVerifiableCredentialSDJwtResult = {
+export type IVerifySdJwtVcResult = {
   verifiedPayloads: unknown;
 };
 
 /**
  * @beta
  */
-export interface IVerifyVerifiablePresentationSDJwtArgs {
+export interface IVerifySdJwtVcPresentationArgs {
   presentation: string;
 
   requiredClaimKeys?: string[];
@@ -155,8 +151,8 @@ export interface IVerifyVerifiablePresentationSDJwtArgs {
 /**
  * @beta
  */
-export type IVerifyVerifiablePresentationSDJwtResult = {
-  verifiedPayloads: unknown;
+export type IVerifySdJwtVcPresentationResult = {
+  verifiedPayloads: Record<string, unknown>;
 };
 
 /**
@@ -176,6 +172,10 @@ export interface SdJWTImplementation {
   verifySignature: (
     data: string,
     signature: string,
-    publicKey: JsonWebKey,
+    publicKey: JsonWebKey
   ) => Promise<boolean>;
+}
+export interface Claims {
+  id: string;
+  [key: string]: unknown;
 }
