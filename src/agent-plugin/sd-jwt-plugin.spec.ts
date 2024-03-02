@@ -24,7 +24,8 @@ import {
 import { DIDResolverPlugin } from '@veramo/did-resolver';
 import { KeyManager } from '@veramo/key-manager';
 import { KeyManagementSystem, SecretBox } from '@veramo/kms-local';
-import { Resolver } from 'did-resolver';
+import { JwkDidSupportedKeyTypes, createJWK } from '@veramo/utils';
+import { DIDDocument, Resolver, VerificationMethod } from 'did-resolver';
 import { createConnection } from 'typeorm';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { SdJwtVcPayload } from '@sd-jwt/sd-jwt-vc';
@@ -32,7 +33,7 @@ import { decodeSdJwt } from '@sd-jwt/decode';
 import { KBJwt } from '@sd-jwt/core';
 import { ISDJwtPlugin, SDJwtPlugin } from '../index';
 
-async function verifySignature(
+async function verifySignature<T>(
   data: string,
   signature: string,
   key: JsonWebKey
@@ -67,8 +68,7 @@ describe('Agent plugin', () => {
 
   // Issuer Define the claims object with the user's information
   const claims = {
-    id: '',
-    sub: 'john_deo_42',
+    sub: '',
     given_name: 'John',
     family_name: 'Deo',
     email: 'johndeo@example.com',
@@ -80,12 +80,12 @@ describe('Agent plugin', () => {
       country: 'US',
     },
     birthdate: '1940-01-01',
+    cnf: { jwk: {} },
   };
 
   // Issuer Define the disclosure frame to specify which claims can be disclosed
   const disclosureFrame: DisclosureFrame<typeof claims> = {
     _sd: [
-      'sub',
       'given_name',
       'family_name',
       'email',
@@ -109,7 +109,7 @@ describe('Agent plugin', () => {
       plugins: [
         new SDJwtPlugin({
           hasher: digest,
-          salltGenerator: generateSalt,
+          saltGenerator: generateSalt,
           verifySignature,
         }),
         new KeyManager({
@@ -157,10 +157,13 @@ describe('Agent plugin', () => {
         options: { keyType: 'Secp256r1' } as JwkCreateIdentifierOptions,
       })
       .then((did) => {
-        // we add a key reference
+        claims.cnf.jwk = createJWK(
+          did.keys[0].type as JwkDidSupportedKeyTypes,
+          did.keys[0].publicKeyHex
+        ) as JsonWebKey;
         return `${did.did}#0`;
       });
-    claims.id = holder;
+    claims.sub = holder;
   });
 
   it('create a sd-jwt', async () => {
@@ -251,11 +254,19 @@ describe('Agent plugin', () => {
   });
 
   it('verify a presentation', async () => {
+    const holderDId = await agent.resolveDid({ didUrl: holder });
+    const jwk: JsonWebKey = (
+      (holderDId.didDocument as DIDDocument)
+        .verificationMethod as VerificationMethod[]
+    )[0].publicKeyJwk as JsonWebKey;
     const credentialPayload: SdJwtVcPayload = {
       ...claims,
       iss: issuer,
       iat: new Date().getTime() / 1000,
       vct: '',
+      cnf: {
+        jwk,
+      },
     };
     const credential = await agent.createSdJwtVc({
       credentialPayload,

@@ -1,7 +1,6 @@
 import { Hasher, KBOptions, SaltGenerator } from '@sd-jwt/types';
 import { SdJwtVcPayload } from '@sd-jwt/sd-jwt-vc';
 import {
-  CredentialPayload,
   IAgentContext,
   IDIDManager,
   IKeyManager,
@@ -97,13 +96,20 @@ export interface ICreateSdJwtVcArgs {
  * @beta
  */
 export interface ICreateSdJwtVcResult {
+  /**
+   * the encoded sd-jwt credential
+   */
   credential: string;
 }
 
 /**
+ *
  * @beta
  */
 export interface ICreateSdJwtVcPresentationArgs {
+  /**
+   * Encoded SD-JWT credential
+   */
   presentation: string;
 
   /*
@@ -113,13 +119,20 @@ export interface ICreateSdJwtVcPresentationArgs {
    */
   presentationKeys?: string[];
 
+  /**
+   * Information to include to add key binding.
+   */
   kb?: KBOptions;
 }
 
 /**
+ * Created presentation
  * @beta
  */
 export interface ICreateSdJwtVcPresentationResult {
+  /**
+   * Encoded presentation.
+   */
   presentation: string;
 }
 
@@ -167,7 +180,7 @@ export type IRequiredContext = IAgentContext<
   IDIDManager & IResolver & IKeyManager
 >;
 export interface SdJWTImplementation {
-  salltGenerator: SaltGenerator;
+  saltGenerator: SaltGenerator;
   hasher: Hasher;
   verifySignature: (
     data: string,
@@ -175,7 +188,14 @@ export interface SdJWTImplementation {
     publicKey: JsonWebKey
   ) => Promise<boolean>;
 }
+
 export interface Claims {
-  id: string;
+  /**
+   * Subject of the SD-JWT
+   */
+  sub?: string;
+  cnf?: {
+    jwk: JsonWebKey;
+  };
   [key: string]: unknown;
 }
