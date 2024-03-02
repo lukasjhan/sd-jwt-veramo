@@ -18,6 +18,7 @@ import {
 } from '../types/ISDJwtPlugin.js';
 import { mapIdentifierKeysToDocWithJwkSupport } from '@sphereon/ssi-sdk-ext.did-utils';
 import { Claims } from '../types/ISDJwtPlugin';
+import { encodeJoseBlob } from '@veramo/utils';
 
 /**
  * SD-JWT plugin for Veramo
@@ -124,18 +125,18 @@ export class SDJwtPlugin implements IAgentPlugin {
       this.algorithms.hasher
     );
     const claims = await cred.getClaims<Claims>(this.algorithms.hasher);
+    let holderDID: string;
+    // we primarly look for a cnf field, if it's not there we look for a sub field. If this is also not given, we throw an error since we can not sign it.
     if (claims.cnf?.jwk) {
-      //TODO: how to handle cnf. we need to get the key id based on the public key.
       const key = claims.cnf.jwk;
-      // context.agent.keyManagerGet({kid})
-    }
-    const holderDID: string = claims.sub as string;
-    // console.log(holderDID);
-    //get the key based on the credential
-    if (!holderDID)
+      holderDID = `did:jwk:${encodeJoseBlob(key)}#0`;
+    } else if (claims.sub) {
+      holderDID = claims.sub as string;
+    } else {
       throw new Error(
         'invalid_argument: credential does not include a holder reference'
       );
+    }
     const { alg, key } = await this.getSignKey(holderDID, context);
 
     const signer: Signer = async (data: string) => {
