@@ -1,6 +1,6 @@
 import { Jwt, SDJwt } from '@sd-jwt/core';
 import { SDJwtVcInstance } from '@sd-jwt/sd-jwt-vc';
-import { Signer, Verifier } from '@sd-jwt/types';
+import { Signer, Verifier, KbVerifier, JwtPayload } from '@sd-jwt/types';
 import { IAgentPlugin } from '@veramo/core-types';
 import schema from '../plugin.schema.json' assert { type: 'json' };
 import { SdJWTImplementation } from '../types/ISDJwtPlugin';
@@ -61,7 +61,7 @@ export class SDJwtPlugin implements IAgentPlugin {
     const sdjwt = new SDJwtVcInstance({
       signer,
       hasher: this.algorithms.hasher,
-      saltGenerator: this.algorithms.salltGenerator,
+      saltGenerator: this.algorithms.saltGenerator,
       signAlg: alg,
       hashAlg: 'SHA-256',
     });
@@ -124,8 +124,13 @@ export class SDJwtPlugin implements IAgentPlugin {
       this.algorithms.hasher
     );
     const claims = await cred.getClaims<Claims>(this.algorithms.hasher);
-    // get the holder id. In case of a w3c vc dm, it is in the credentialsubject
-    const holderDID: string = claims.id;
+    if (claims.cnf?.jwk) {
+      //TODO: how to handle cnf. we need to get the key id based on the public key.
+      const key = claims.cnf.jwk;
+      // context.agent.keyManagerGet({kid})
+    }
+    const holderDID: string = claims.sub as string;
+    // console.log(holderDID);
     //get the key based on the credential
     if (!holderDID)
       throw new Error(
@@ -139,7 +144,7 @@ export class SDJwtPlugin implements IAgentPlugin {
 
     const sdjwt = new SDJwtVcInstance({
       hasher: this.algorithms.hasher,
-      saltGenerator: this.algorithms.salltGenerator,
+      saltGenerator: this.algorithms.saltGenerator,
       kbSigner: signer,
       kbSignAlg: alg,
     });
@@ -173,6 +178,29 @@ export class SDJwtPlugin implements IAgentPlugin {
   }
 
   /**
+   * Verify the key binding of a SD-JWT by validating the signature of the key bound to the SD-JWT
+   * @param sdjwt
+   * @param context
+   * @param data
+   * @param signature
+   * @param payload
+   * @returns
+   */
+  private verifyKb(
+    sdjwt: SDJwtVcInstance,
+    context: IRequiredContext,
+    data: string,
+    signature: string,
+    payload: JwtPayload
+  ): Promise<boolean> {
+    if (!payload.cnf) {
+      throw Error('other method than cnf is not supported yet');
+    }
+    const key = payload.cnf.jwk as JsonWebKey;
+    return this.algorithms.verifySignature(data, signature, key);
+  }
+
+  /**
    * Validates the signature of a SD-JWT
    * @param sdjwt
    * @param context
@@ -184,18 +212,12 @@ export class SDJwtPlugin implements IAgentPlugin {
     sdjwt: SDJwtVcInstance,
     context: IRequiredContext,
     data: string,
-    signature: string,
-    verifyKb = false
+    signature: string
   ) {
     const decodedVC = await sdjwt.decode(`${data}.${signature}`);
-    if (verifyKb) {
-      //to verify the kb, we need the get access to the public key of the holder
-      console.log(decodedVC);
-    }
     const issuer: string = (
       (decodedVC.jwt as Jwt).payload as Record<string, unknown>
     ).iss as string;
-    //check if the issuer is a did
     if (!issuer.startsWith('did:')) {
       throw new Error('invalid_issuer: issuer must be a did');
     }
@@ -232,8 +254,11 @@ export class SDJwtPlugin implements IAgentPlugin {
     let sdjwt: SDJwtVcInstance;
     const verifier: Verifier = async (data: string, signature: string) =>
       this.verify(sdjwt, context, data, signature);
-    const verifierKb: Verifier = async (data: string, signature: string) =>
-      this.verify(sdjwt, context, data, signature, true);
+    const verifierKb: KbVerifier = async (
+      data: string,
+      signature: string,
+      payload: JwtPayload
+    ) => this.verifyKb(sdjwt, context, data, signature, payload);
     sdjwt = new SDJwtVcInstance({
       verifier,
       hasher: this.algorithms.hasher,

@@ -31,18 +31,18 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@sd-jwt/core": "0.3.2-next.97",
-    "@sd-jwt/decode": "0.3.2-next.97",
-    "@sd-jwt/sd-jwt-vc": "^0.3.2-next.94",
-    "@sd-jwt/types": "0.3.2-next.97",
+    "@sd-jwt/core": "next",
+    "@sd-jwt/decode": "next",
+    "@sd-jwt/sd-jwt-vc": "next",
+    "@sd-jwt/types": "next",
     "@sphereon/ssi-sdk-ext.did-utils": "^0.16.0",
     "@veramo/core-types": "^5.6.0",
-    "@veramo/utils": "^5.6.0"
+    "@veramo/utils": "5.6.1-next.57"
   },
   "devDependencies": {
     "@biomejs/biome": "1.5.3",
     "@release-it/conventional-changelog": "^8.0.1",
-    "@sd-jwt/crypto-nodejs": "^2.0.2-next.26",
+    "@sd-jwt/crypto-nodejs": "next",
     "@types/node": "^20.11.21",
     "@veramo/cli": "^5.6.0",
     "@veramo/core": "^5.6.0",
