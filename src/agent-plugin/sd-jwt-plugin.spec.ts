@@ -27,8 +27,10 @@ import { KeyManagementSystem, SecretBox } from '@veramo/kms-local';
 import { Resolver } from 'did-resolver';
 import { createConnection } from 'typeorm';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { ISDJwtPlugin, SDJwtPlugin } from '../src/';
-import { KBJwt, SDJwt } from '@sd-jwt/core';
+import { SdJwtVcPayload } from '@sd-jwt/sd-jwt-vc';
+import { decodeSdJwt } from '@sd-jwt/decode';
+import { KBJwt } from '@sd-jwt/core';
+import { ISDJwtPlugin, SDJwtPlugin } from '../index';
 
 async function verifySignature(
   data: string,
@@ -162,34 +164,80 @@ describe('Agent plugin', () => {
   });
 
   it('create a sd-jwt', async () => {
-    const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { ...claims, iss: issuer },
+    const credentialPayload: SdJwtVcPayload = {
+      ...claims,
+      iss: issuer,
+      iat: new Date().getTime() / 1000,
+      vct: '',
+    };
+    const credential = await agent.createSdJwtVc({
+      credentialPayload,
       disclosureFrame,
     });
     expect(credential).toBeDefined();
   });
 
+  it('create sd without an issuer', async () => {
+    const credentialPayload = {
+      ...claims,
+      iat: new Date().getTime() / 1000,
+      vct: '',
+    };
+    expect(
+      agent.createSdJwtVc({
+        credentialPayload: credentialPayload as unknown as SdJwtVcPayload,
+        disclosureFrame,
+      })
+    ).rejects.toThrow('credential.issuer must not be empty');
+  });
+
+  it('creat sd without the issuers key reference', async () => {
+    const credentialPayload: SdJwtVcPayload = {
+      ...claims,
+      iss: 'did:web:issuer',
+      iat: new Date().getTime() / 1000,
+      vct: '',
+    };
+    expect(
+      agent.createSdJwtVc({
+        credentialPayload,
+        disclosureFrame,
+      })
+    ).rejects.toThrow('credential.issuer must reference a key');
+  });
+
   it('verify a sd-jwt', async () => {
-    const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { ...claims, iss: issuer },
+    const credentialPayload: SdJwtVcPayload = {
+      ...claims,
+      iss: issuer,
+      iat: new Date().getTime() / 1000,
+      vct: '',
+    };
+    const credential = await agent.createSdJwtVc({
+      credentialPayload,
       disclosureFrame: disclosureFrame,
     });
-    const verified = await agent.verifyVerifiableCredentialSDJwt({
+    const verified = await agent.verifySdJwtVc({
       credential: credential.credential,
     });
   }, 5000);
 
   it('create a presentation', async () => {
-    const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { ...claims, iss: issuer },
+    const credentialPayload: SdJwtVcPayload = {
+      ...claims,
+      iss: issuer,
+      iat: new Date().getTime() / 1000,
+      vct: '',
+    };
+    const credential = await agent.createSdJwtVc({
+      credentialPayload,
       disclosureFrame,
     });
-    const presentation = await agent.createVerifiablePresentationSDJwt({
+    const presentation = await agent.createSdJwtVcPresentation({
       presentation: credential.credential,
       presentationKeys: ['given_name'],
       kb: {
         payload: {
-          sd_hash: 'sha-256',
           aud: '1',
           iat: 1,
           nonce: '342',
@@ -197,34 +245,40 @@ describe('Agent plugin', () => {
       },
     });
     expect(presentation).toBeDefined();
-    const decoded = await SDJwt.decodeSDJwt(presentation.presentation, digest);
+    const decoded = await decodeSdJwt(presentation.presentation, digest);
     expect(decoded.kbJwt).toBeDefined();
     expect(((decoded.kbJwt as KBJwt).payload as kbPayload).aud).toBe('1');
   });
 
   it('verify a presentation', async () => {
-    const credential = await agent.createVerifiableCredentialSDJwt({
-      credentialPayload: { ...claims, iss: issuer },
+    const credentialPayload: SdJwtVcPayload = {
+      ...claims,
+      iss: issuer,
+      iat: new Date().getTime() / 1000,
+      vct: '',
+    };
+    const credential = await agent.createSdJwtVc({
+      credentialPayload,
       disclosureFrame,
     });
-    const presentation = await agent.createVerifiablePresentationSDJwt({
+    const presentation = await agent.createSdJwtVcPresentation({
       presentation: credential.credential,
       presentationKeys: ['given_name'],
       kb: {
         payload: {
-          sd_hash: 'sha-256',
           aud: '1',
           iat: 1,
           nonce: '342',
         },
       },
     });
-    const result = await agent.verifyVerifiablePresentationSDJwt({
+    const result = await agent.verifySdJwtVcPresentation({
       presentation: presentation.presentation,
       requiredClaimKeys: ['given_name'],
-      kb: false,
+      // we are not able to verify the kb yet since we have no reference to the public key of the holder.
+      kb: true,
     });
     expect(result).toBeDefined();
-    expect(result.verifiedPayloads.payload.given_name).toBe('John');
+    expect((result.verifiedPayloads.payload as any).given_name).toBe('John');
   });
 });
