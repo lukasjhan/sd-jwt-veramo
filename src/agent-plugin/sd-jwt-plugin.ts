@@ -3,7 +3,7 @@ import { SDJwtVcInstance } from '@sd-jwt/sd-jwt-vc';
 import { Signer, Verifier, KbVerifier, JwtPayload } from '@sd-jwt/types';
 import { IAgentPlugin } from '@veramo/core-types';
 import schema from '../plugin.schema.json' assert { type: 'json' };
-import { SdJWTImplementation } from '../types/ISDJwtPlugin';
+import { SdJWTImplementation } from '../types/i-sd-jwt-plugin';
 import {
   ICreateSdJwtVcArgs,
   ICreateSdJwtVcResult,
@@ -15,9 +15,9 @@ import {
   IVerifySdJwtVcResult,
   IVerifySdJwtVcPresentationArgs,
   IVerifySdJwtVcPresentationResult,
-} from '../types/ISDJwtPlugin.js';
+} from '../types/i-sd-jwt-plugin.js';
 import { mapIdentifierKeysToDocWithJwkSupport } from '@sphereon/ssi-sdk-ext.did-utils';
-import { Claims } from '../types/ISDJwtPlugin';
+import { Claims } from '../types/i-sd-jwt-plugin';
 import { encodeJoseBlob } from '@veramo/utils';
 
 /**

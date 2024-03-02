@@ -290,6 +290,8 @@ describe('Agent plugin', () => {
       kb: true,
     });
     expect(result).toBeDefined();
-    expect((result.verifiedPayloads.payload as any).given_name).toBe('John');
+    expect((result.verifiedPayloads.payload as typeof claims).given_name).toBe(
+      'John',
+    );
   });
 });
