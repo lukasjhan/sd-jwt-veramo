@@ -3994,7 +3994,7 @@ packages:
       '@stablelib/aes-kw': 1.0.1
       '@stablelib/xchacha20poly1305': 1.0.1
       base64url: 3.0.1
-      jose: 4.15.4
+      jose: 4.15.5
       web-streams-polyfill: 3.3.3
     dev: true
 
@@ -4416,7 +4416,7 @@ packages:
       '@transmute/credentials-context': 0.7.0-unstable.82
       '@transmute/ed25519-signature-2018': 0.7.0-unstable.82
       '@transmute/json-web-signature': 0.7.0-unstable.82
-      '@veramo-community/lds-ecdsa-secp256k1-recovery2020': github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4)
+      '@veramo-community/lds-ecdsa-secp256k1-recovery2020': git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4)
       '@veramo/core-types': 5.6.0
       '@veramo/utils': 5.6.0
       cross-fetch: 4.0.0
@@ -8077,8 +8077,8 @@ packages:
     dev: true
     optional: true
 
-  /jose@4.15.4:
-    resolution: {integrity: sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==}
+  /jose@4.15.5:
+    resolution: {integrity: sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==}
     dev: true
 
   /js-base64@3.7.7:
@@ -12112,9 +12112,9 @@ packages:
       commander: 10.0.1
     dev: true
 
-  github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4):
-    resolution: {tarball: https://codeload.github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/tar.gz/ab0db52de6f4e6663ef271a48009ba26e688ef9b}
-    id: github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b
+  git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4):
+    resolution: {commit: ab0db52de6f4e6663ef271a48009ba26e688ef9b, repo: git@github.com:uport-project/EcdsaSecp256k1RecoverySignature2020.git, type: git}
+    id: git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b
     name: '@veramo-community/lds-ecdsa-secp256k1-recovery2020'
     version: 0.0.8
     dependencies:
