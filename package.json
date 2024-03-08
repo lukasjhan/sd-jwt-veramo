@@ -51,7 +51,7 @@
   ],
   "dependencies": {
     "@sd-jwt/core": "next",
-    "@sd-jwt/crypto-nodejs": "0.3.2-next.63",
+    "@sd-jwt/crypto-nodejs": "0.3.2-next.113",
     "@sd-jwt/types": "0.3.2-next.63",
     "@sd-jwt/utils": "next",
     "@types/node": "^20.11.20",
