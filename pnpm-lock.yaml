@@ -16,7 +16,7 @@ dependencies:
     version: 0.3.2-next.63
   '@sd-jwt/utils':
     specifier: next
-    version: 0.3.2-next.63
+    version: 0.4.1-next.6
   '@types/node':
     specifier: ^20.11.20
     version: 20.11.20
@@ -3665,10 +3665,23 @@ packages:
     resolution: {integrity: sha512-6FG9n/RYJK5YRU8GI/61rBYPZ/0N+nq1CJ2MAUyv9jHX3FzVHACVoyIwxPaAXHgRFGGgn5WwwL1uqC2c/8Arnw==}
     dev: false
 
+  /@sd-jwt/types@0.4.1-next.6:
+    resolution: {integrity: sha512-PU9UI6weNGohDdumbmF46uDVPWh+O0SLWdxYePPwqDNwdHRCTiYWCn5T1Z3HjaX3GivPgGbtCBRH6Ocge68nwA==}
+    engines: {node: '>=16'}
+    dev: false
+
   /@sd-jwt/utils@0.3.2-next.63:
     resolution: {integrity: sha512-cpHTdkddSDDLfFgeYZvtmqClmvQNuRIl/b2gGFKcw8gVWyYl9ERgcrpTmwJwUK7n5CZgBEM+dhKuxPxT9egqXw==}
     dependencies:
       '@sd-jwt/types': 0.3.2-next.63
+      js-base64: 3.7.7
+    dev: false
+
+  /@sd-jwt/utils@0.4.1-next.6:
+    resolution: {integrity: sha512-r/X5hm0G4wbJhGrKZXTcnRMnH7orNczLxvHuhdLKaI2cbfdRuXxcSKCDoFdVzhFViubxzhnLZEUOLzZareD1kA==}
+    engines: {node: '>=16'}
+    dependencies:
+      '@sd-jwt/types': 0.4.1-next.6
       js-base64: 3.7.7
     dev: false
 
@@ -4416,7 +4429,7 @@ packages:
       '@transmute/credentials-context': 0.7.0-unstable.82
       '@transmute/ed25519-signature-2018': 0.7.0-unstable.82
       '@transmute/json-web-signature': 0.7.0-unstable.82
-      '@veramo-community/lds-ecdsa-secp256k1-recovery2020': github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4)
+      '@veramo-community/lds-ecdsa-secp256k1-recovery2020': git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4)
       '@veramo/core-types': 5.6.0
       '@veramo/utils': 5.6.0
       cross-fetch: 4.0.0
@@ -12112,9 +12125,9 @@ packages:
       commander: 10.0.1
     dev: true
 
-  github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4):
-    resolution: {tarball: https://codeload.github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/tar.gz/ab0db52de6f4e6663ef271a48009ba26e688ef9b}
-    id: github.com/uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b
+  git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b(expo@50.0.7)(react-native@0.73.4):
+    resolution: {commit: ab0db52de6f4e6663ef271a48009ba26e688ef9b, repo: git@github.com:uport-project/EcdsaSecp256k1RecoverySignature2020.git, type: git}
+    id: git@github.com+uport-project/EcdsaSecp256k1RecoverySignature2020/ab0db52de6f4e6663ef271a48009ba26e688ef9b
     name: '@veramo-community/lds-ecdsa-secp256k1-recovery2020'
     version: 0.0.8
     dependencies:
